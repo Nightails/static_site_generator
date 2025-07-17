@@ -1,11 +1,11 @@
 import re
 
-from textnode import TextType, TextNode 
+from textnode import TextType, TextNode
 from htmlnode import LeafNode
 
 
 def text_node_to_html_node(text_node):
-    match (text_node.text_type):
+    match text_node.text_type:
         case TextType.TEXT:
             return LeafNode(None, text_node.text, None)
         case TextType.BOLD:
@@ -17,9 +17,12 @@ def text_node_to_html_node(text_node):
         case TextType.LINK:
             return LeafNode("a", text_node.text, {"href": f"{text_node.url}"})
         case TextType.IMAGE:
-            return LeafNode("img", None, {"src": f"{text_node.url}", "alt": f"{text_node.text}"})
+            return LeafNode(
+                "img", None, {"src": f"{text_node.url}", "alt": f"{text_node.text}"}
+            )
         case _:
             raise Exception(f"{text_node} has invalid text_type")
+
 
 def text_to_textnodes(text):
     nodes = [TextNode(text, TextType.TEXT)]
@@ -90,7 +93,7 @@ def split_nodes_image(old_nodes):
             text_nodes.append(TextNode(text_to_split, TextType.TEXT))
 
         # merge both image and text nodes into final result
-        i = 0 # image index
+        i = 0  # image index
         for t in text_nodes:
             final_nodes.append(t)
             if i < len(image_nodes):
@@ -114,17 +117,17 @@ def split_nodes_link(old_nodes):
             final_nodes.append(node)
             continue
 
-        for l in links:
-            link_nodes.append(TextNode(l[0], TextType.LINK, l[1]))
+        for link in links:
+            link_nodes.append(TextNode(link[0], TextType.LINK, link[1]))
 
         # split text to sections and remove extracted markdown images
         # then create the nodes
         text_nodes = []
         text_to_split = node.text
-        for l in link_nodes:
+        for link_node in link_nodes:
             # assume each image is unique
             # otherwise, that is future me's problem
-            sections = text_to_split.split(f"[{l.text}]({l.url})", 1)
+            sections = text_to_split.split(f"[{link_node.text}]({link_node.url})", 1)
             # there may still be left over sectons to split
             text_to_split = sections[1] if len(sections) > 1 else sections[0]
             text_nodes.append(TextNode(sections[0], TextType.TEXT))
@@ -133,7 +136,7 @@ def split_nodes_link(old_nodes):
             text_nodes.append(TextNode(text_to_split, TextType.TEXT))
 
         # merge both image and text nodes into final result
-        i = 0 # image index
+        i = 0  # image index
         for t in text_nodes:
             final_nodes.append(t)
             if i < len(link_nodes):
@@ -141,4 +144,3 @@ def split_nodes_link(old_nodes):
                 i += 1
 
     return final_nodes
-
