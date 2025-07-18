@@ -1,6 +1,7 @@
 import unittest
 
-from htmlnode import HTMLNode, LeafNode, ParentNode
+from src.htmlnode import HTMLNode, LeafNode, ParentNode
+
 
 class TestHTMLNode(unittest.TestCase):
     def test_to_html_props(self):
@@ -55,13 +56,13 @@ class TextLeafNode(unittest.TestCase):
         test_cases = [
             ["p", "This is a paragraph of text."],
             ["a", "Click me!", {"href": "https://www.google.com"}],
-            [None, "Some raw text."]
+            [None, "Some raw text."],
         ]
 
         test_results = [
-            '<p>This is a paragraph of text.</p>',
+            "<p>This is a paragraph of text.</p>",
             '<a href="https://www.google.com">Click me!</a>',
-            'Some raw text.'
+            "Some raw text.",
         ]
 
         nodes = []
@@ -92,4 +93,3 @@ class TextParentNode(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

@@ -1,10 +1,7 @@
 import unittest
 
-from block import (
-    BlockType,
-    markdown_to_blocks,
-    block_to_block_type,
-)
+from src.markdown_blocks import BlockType, block_to_block_type, markdown_to_blocks
+
 
 class TestMarkdownToBlocks(unittest.TestCase):
     def test_markdown_to_blocks(self):
@@ -54,43 +51,24 @@ A normal paragraph
         block_types.append(block_to_block_type(b))
 
     def test_heading(self):
-        self.assertEqual(
-            self.block_types[0],
-            BlockType.HEADING
-        )
+        self.assertEqual(self.block_types[0], BlockType.HEADING)
 
     def test_code(self):
         print(self.blocks[1])
-        self.assertEqual(
-            self.block_types[1],
-            BlockType.CODE
-        )
+        self.assertEqual(self.block_types[1], BlockType.CODE)
 
     def test_quote(self):
-        self.assertEqual(
-            self.block_types[2],
-            BlockType.QUOTE
-        )
+        self.assertEqual(self.block_types[2], BlockType.QUOTE)
 
     def test_unordered_list(self):
-        self.assertEqual(
-            self.block_types[3],
-            BlockType.UNORDERED_LIST
-        )
+        self.assertEqual(self.block_types[3], BlockType.UNORDERED_LIST)
 
     def test_ordered_list(self):
-        self.assertEqual(
-            self.block_types[4],
-            BlockType.ORDERED_LIST
-        )
+        self.assertEqual(self.block_types[4], BlockType.ORDERED_LIST)
 
     def test_paragraph(self):
-        self.assertEqual(
-            self.block_types[5],
-            BlockType.PARAGRAPH
-        )
+        self.assertEqual(self.block_types[5], BlockType.PARAGRAPH)
 
 
 if __name__ == "__main__":
     unittest.main()
-
