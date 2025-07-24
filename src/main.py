@@ -1,29 +1,24 @@
 import os
 import shutil
-from config import STATIC_DIR, PUBLIC_DIR
+import static
+import html
+
+
+static_dir = "./static"
+content_dir = "./content"
+public_dir = "./public"
 
 
 def main():
-    if os.path.exists(PUBLIC_DIR):
-        shutil.rmtree(PUBLIC_DIR)
-        os.mkdir(PUBLIC_DIR)
+    print("Deletings public directory...")
+    if os.path.exists(public_dir):
+        shutil.rmtree(public_dir)
+        os.mkdir(public_dir)
 
-    copy_contents(STATIC_DIR, PUBLIC_DIR)
-
-
-def copy_contents(source_dir, target_dir):
-    if not os.path.exists(target_dir):
-        os.mkdir(target_dir)
-
-    entries = os.listdir(source_dir)
-    for entry in entries:
-        copy_source = os.path.join(source_dir, entry)
-        if os.path.isfile(copy_source):
-            shutil.copy(copy_source, target_dir)
-            print(f'copied "{copy_source}" to {os.path.join(target_dir, entry)}')
-        else:
-            copy_target = os.path.join(target_dir, entry)
-            copy_contents(copy_source, copy_target)
+    print("Copyting static files to public directory...")
+    static.copy_static_contents(static_dir, public_dir)
+    print("Generating html files to public directory...")
+    html.generate_page(content_dir, os.getcwd(), public_dir)
 
 
 main()
