@@ -3,14 +3,20 @@ import shutil
 import static
 import content
 
+from sys import argv
+
 
 STATIC_DIR = "./static"
 CONTENT_DIR = "./content"
-PUBLIC_DIR = "./public"
+PUBLIC_DIR = "./docs"
 TEMPLATE_PATH = "./template.html"
 
 
 def main():
+    basepath = argv[1]
+    if basepath is None:
+        basepath = "/"
+
     print("Deletings public directory...")
     if os.path.exists(PUBLIC_DIR):
         shutil.rmtree(PUBLIC_DIR)
@@ -19,7 +25,7 @@ def main():
     print("Copyting static files to public directory...")
     static.copy_static_contents(STATIC_DIR, PUBLIC_DIR)
     print("Generating pages...")
-    content.generate_page_recursive(CONTENT_DIR, TEMPLATE_PATH, PUBLIC_DIR)
+    content.generate_page_recursive(CONTENT_DIR, TEMPLATE_PATH, PUBLIC_DIR, basepath)
 
 
 main()
