@@ -4,7 +4,7 @@ import shutil
 
 def copy_static_contents(source_dir, target_dir):
     if not os.path.exists(target_dir):
-        os.mkdir(target_dir)
+        os.makedirs(target_dir)
 
     for filename in os.listdir(source_dir):
         from_path = os.path.join(source_dir, filename)

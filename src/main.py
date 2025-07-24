@@ -4,22 +4,22 @@ import static
 import content
 
 
-static_dir = "./static"
-content_dir = "./content"
-public_dir = "./public"
-template_path = "./template.html"
+STATIC_DIR = "./static"
+CONTENT_DIR = "./content"
+PUBLIC_DIR = "./public"
+TEMPLATE_PATH = "./template.html"
 
 
 def main():
     print("Deletings public directory...")
-    if os.path.exists(public_dir):
-        shutil.rmtree(public_dir)
-        os.mkdir(public_dir)
+    if os.path.exists(PUBLIC_DIR):
+        shutil.rmtree(PUBLIC_DIR)
+        os.mkdir(PUBLIC_DIR)
 
     print("Copyting static files to public directory...")
-    static.copy_static_contents(static_dir, public_dir)
+    static.copy_static_contents(STATIC_DIR, PUBLIC_DIR)
     print("Generating pages...")
-    content.generate_page(content_dir, template_path, public_dir)
+    content.generate_page_recursive(CONTENT_DIR, TEMPLATE_PATH, PUBLIC_DIR)
 
 
 main()
