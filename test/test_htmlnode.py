@@ -1,11 +1,10 @@
 import unittest
-
-from src.htmlnode import HTMLNode, LeafNode, ParentNode
+from src import htmlnode
 
 
 class TestHTMLNode(unittest.TestCase):
     def test_to_html_props(self):
-        node = HTMLNode(
+        node = htmlnode.HTMLNode(
             "div",
             "Hello, world!",
             None,
@@ -17,7 +16,7 @@ class TestHTMLNode(unittest.TestCase):
         )
 
     def test_values(self):
-        node = HTMLNode(
+        node = htmlnode.HTMLNode(
             "div",
             "I wish I could read",
         )
@@ -39,7 +38,7 @@ class TestHTMLNode(unittest.TestCase):
         )
 
     def test_repr(self):
-        node = HTMLNode(
+        node = htmlnode.HTMLNode(
             "p",
             "What a strange world",
             None,
@@ -50,44 +49,63 @@ class TestHTMLNode(unittest.TestCase):
             "HTMLNode(p, What a strange world, children: None, {'class': 'primary'})",
         )
 
+    def test_leaf_to_html_p(self):
+        node = htmlnode.LeafNode("p", "Hello, world!")
+        self.assertEqual(node.to_html(), "<p>Hello, world!</p>")
 
-class TextLeafNode(unittest.TestCase):
-    def test_to_html(self):
-        test_cases = [
-            ["p", "This is a paragraph of text."],
-            ["a", "Click me!", {"href": "https://www.google.com"}],
-            [None, "Some raw text."],
-        ]
-
-        test_results = [
-            "<p>This is a paragraph of text.</p>",
+    def test_leaf_to_html_a(self):
+        node = htmlnode.LeafNode("a", "Click me!", {"href": "https://www.google.com"})
+        self.assertEqual(
+            node.to_html(),
             '<a href="https://www.google.com">Click me!</a>',
-            "Some raw text.",
-        ]
+        )
 
-        nodes = []
-        for case in test_cases:
-            if len(case) < 3:
-                nodes.append(LeafNode(case[0], case[1]))
-            else:
-                nodes.append(LeafNode(case[0], case[1], case[2]))
-        for i in range(len(test_results)):
-            self.assertEqual(nodes[i].to_html(), test_results[i])
+    def test_leaf_to_html_no_tag(self):
+        node = htmlnode.LeafNode(None, "Hello, world!")
+        self.assertEqual(node.to_html(), "Hello, world!")
 
-
-class TextParentNode(unittest.TestCase):
     def test_to_html_with_children(self):
-        child_node = LeafNode("span", "child")
-        parent_node = ParentNode("div", [child_node])
+        child_node = htmlnode.LeafNode("span", "child")
+        parent_node = htmlnode.ParentNode("div", [child_node])
         self.assertEqual(parent_node.to_html(), "<div><span>child</span></div>")
 
     def test_to_html_with_grandchildren(self):
-        grandchild_node = LeafNode("b", "grandchild")
-        child_node = ParentNode("span", [grandchild_node])
-        parent_node = ParentNode("div", [child_node])
+        grandchild_node = htmlnode.LeafNode("b", "grandchild")
+        child_node = htmlnode.ParentNode("span", [grandchild_node])
+        parent_node = htmlnode.ParentNode("div", [child_node])
         self.assertEqual(
             parent_node.to_html(),
             "<div><span><b>grandchild</b></span></div>",
+        )
+
+    def test_to_html_many_children(self):
+        node = htmlnode.ParentNode(
+            "p",
+            [
+                htmlnode.LeafNode("b", "Bold text"),
+                htmlnode.LeafNode(None, "Normal text"),
+                htmlnode.LeafNode("i", "italic text"),
+                htmlnode.LeafNode(None, "Normal text"),
+            ],
+        )
+        self.assertEqual(
+            node.to_html(),
+            "<p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>",
+        )
+
+    def test_headings(self):
+        node = htmlnode.ParentNode(
+            "h2",
+            [
+                htmlnode.LeafNode("b", "Bold text"),
+                htmlnode.LeafNode(None, "Normal text"),
+                htmlnode.LeafNode("i", "italic text"),
+                htmlnode.LeafNode(None, "Normal text"),
+            ],
+        )
+        self.assertEqual(
+            node.to_html(),
+            "<h2><b>Bold text</b>Normal text<i>italic text</i>Normal text</h2>",
         )
 
 
